@@ -1,0 +1,43 @@
+> str(GDP)
+
+> imod0 <- lm(GDP ~ Personal.Income, data = GDP)
+> summary(imod0)
+
+> par(mfrow = c(1, 2))
+> hist(GDP$Personal.Income, xlab = "Personal Income", main = "")
+> qqnorm(GDP$Personal.Income)
+> qqline(GDP$Personal.Income)
+
+
+> hist(log10(GDP$Personal.Income), xlab = "Personal Income", main = "")
+> qqnorm(log10(GDP$Personal.Income))
+> qqline(log10(GDP$Personal.Income))
+
+> par(mfrow = c(1,2))
+> plot(GDP$GDP, log10(GDP$Personal.Income), xlab = 'GDP', ylab = 'Log10(Personal
+Income)')
+
+> par(mfrow = c(1,2))
+> plot(log10(GDP$GDP), log10(GDP$Personal.Income), xlab = 'log10 (GDP)', ylab = 'Log10(
+Personal Income)')
+
+> imod <- lm(log10(Personal.Income) ~ log10(GDP), data = GDP)
+> plot(imod$fitted.values, imod$residuals, xlab = 'Fitted value', ylab = 'Residual')
+> abline(a = 0, b = 0)
+
+ord <- order(imod$residuals)
+> GDP[ord[1], ]
+> GDP[ord[2], ]
+
+
+GDP.new <- GDP[-c(ord[1], ord[2]),]
+> imod.new <- lm(log10(Personal.Income) ~ log10(GDP), data = GDP.new)
+> plot(log10(GDP$GDP), log10(GDP$Personal.Income), xlab = 'Log10(GDP)', ylab =
+'Log10(Personal.Income)')
+> abline(imod, col = 'red')
+> abline(imod.new, col = 'blue')
+
+> range(GDP$GDP)
+> pred.data <- data.frame(GDP = 300000)
+> result <- predict(imod, newdata = pred.data, interval = 'prediction')
+> 10^result
